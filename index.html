@@ -9,13 +9,98 @@
   </head>
   
   <body>
-    <h1>Granada High Tutorial</h1>
-    <p>Processing demo</p>
+    <h1>Pensieri buttati</h1>
+    <p>A space where you can express your feelings</p>
     
     <script type="text/processing">
     
-    
-    
+    String map = "abcdefghijklmnopqrstuvwxyz ";
+    PImage [] images;
+    //PImage enterRed;
+    char letter;
+    String words = "";
+    char chr;
+    int x = 10;
+    int cellSize = 3;
+    int index;
+    int y = 10;
+    PGraphics canvas;
+    int seeCanv = color (200, 255);
+    int seeText = color (255, 255);
+
+
+    void setup() {
+
+      size(100, 100);
+      background(255);
+
+      images = new PImage[map.length()];
+      for (int i = 0; i < images.length; i++) {
+        println("loading images:" + i + ".png");
+        images[i] = loadImage(i + ".png");
+      }
+      //enterRed = loadImage("27.png");
+      canvas = createGraphics(width, height);
+    }
+
+    void draw() {
+
+      if (x >= width - 10) {
+        y += 3;
+        x = 10;
+      }
+      if (y >= height - 10) {
+        x = width - 10;
+        y = height - 10;
+      }
+
+      noStroke();
+      fill(255,0,0);
+      float cursorPosition = x;
+      rect(cursorPosition, y, 2, 2);
+
+      canvas.beginDraw();
+      canvas.background(seeCanv);
+      canvas.fill(seeText);
+      canvas.textSize(20);
+      canvas.text(words, 0, 20);
+      canvas.endDraw();
+    }
+
+    void keyTyped() {
+      // The variable "key" always contains the value
+      // of the most recent key pressed.
+      if (key >= 'a' && key <= 'z') {
+        letter = key;
+        words = words + key;
+        for (int i=0; i<words.length(); i++) {
+          chr = words.charAt(i);
+          index = map.indexOf(chr);
+          // Write the letter to the console
+          println(chr);
+        }
+      }
+      /*
+      if (key == ENTER) {
+       image(enterRed, x, y);
+       }
+       */
+      image(images[index], x, y);
+      x += cellSize;
+      print(words);
+    }
+
+    void mousePressed() {
+      words = "";
+      image(canvas, 0, 0);
+    }
+
+    void mouseReleased() {
+      background(255);
+      x = 10;
+      y = 10;
+    }
+
     </script>
     <canvas id="sketch" style="border: 1px solid black;"></canvas>
     
