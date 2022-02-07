@@ -14,95 +14,93 @@
     
     <script type="text/processing">
     
-    /**
- * Keyboard Functions 
- * by Martin Gomez 
- * 
- * Click on the window to give it focus and press the letter keys to type colors. 
- * The keyboard function keyPressed() is called whenever
- * a key is pressed. keyReleased() is another keyboard
- * function that is called when a key is released.
- * 
- * Original 'Color Typewriter' concept by John Maeda. 
- */
- 
-    int maxHeight = 40;
-    int minHeight = 20;
-    int letterHeight = maxHeight; // Height of the letters
-    int letterWidth = 20;          // Width of the letter
+    String map = "abcdefghijklmnopqrstuvwxyz ";
+    PImage [] images;
+    //PImage enterRed;
+    char letter;
+    String words = "";
+    char chr;
+    int x = 10;
+    int cellSize = 3;
+    int index;
+    int y = 10;
+    PGraphics canvas;
+    int seeCanv = color (200, 255);
+    int seeText = color (255, 255);
 
-    int x = -letterWidth;          // X position of the letters
-    int y = 0;                      // Y position of the letters
-
-    boolean newletter;              
-
-    int numChars = 26;      // There are 26 characters in the alphabet
-    color[] colors = new color[numChars];
 
     void setup() {
-      size(640, 360);
-      noStroke();
-      colorMode(HSB, numChars);
-      background(numChars/2);
-      // Set a hue value for each key
-      for(int i = 0; i < numChars; i++) {
-        colors[i] = color(i, numChars, numChars);    
+
+      size(100, 100);
+      background(255);
+
+      images = new PImage[map.length()];
+      for (int i = 0; i < images.length; i++) {
+        images[i] = loadImage(i + ".png");
       }
+      //enterRed = loadImage("27.png");
+      canvas = createGraphics(width, height);
     }
 
     void draw() {
-      if(newletter == true) {
-        // Draw the "letter"
-        int y_pos;
-        if (letterHeight == maxHeight) {
-          y_pos = y;
-          rect( x, y_pos, letterWidth, letterHeight );
-        } else {
-          y_pos = y + minHeight;
-          rect( x, y_pos, letterWidth, letterHeight );
-          fill(numChars/2);
-          rect( x, y_pos-minHeight, letterWidth, letterHeight );
-        }
-        newletter = false;
+
+      if (x >= width - 10) {
+        y += 3;
+        x = 10;
       }
+      if (y >= height - 10) {
+        x = width - 10;
+        y = height - 10;
+      }
+
+      noStroke();
+      fill(255,0,0);
+      float cursorPosition = x;
+      rect(cursorPosition, y, 2, 2);
+
+      canvas.beginDraw();
+      canvas.background(seeCanv);
+      canvas.fill(seeText);
+      canvas.textSize(20);
+      canvas.text(words, 0, 20);
+      canvas.endDraw();
     }
 
-    void keyPressed()
-    {
-      // If the key is between 'A'(65) to 'Z' and 'a' to 'z'(122)
-      if((key >= 'A' && key <= 'Z') || (key >= 'a' && key <= 'z')) {
-        int keyIndex;
-        if(key <= 'Z') {
-          keyIndex = key-'A';
-          letterHeight = maxHeight;
-          fill(colors[keyIndex]);
-        } else {
-          keyIndex = key-'a';
-          letterHeight = minHeight;
-          fill(colors[keyIndex]);
+    void keyTyped() {
+      // The variable "key" always contains the value
+      // of the most recent key pressed.
+      if (key >= 'a' && key <= 'z') {
+        letter = key;
+        words = words + key;
+        for (int i=0; i<words.length(); i++) {
+          chr = words.charAt(i);
+          index = map.indexOf(chr);
+          // Write the letter to the console
+          println(chr);
         }
-      } else {
-        fill(0);
-        letterHeight = 10;
       }
-
-      newletter = true;
-
-      // Update the "letter" position
-      x = ( x + letterWidth ); 
-
-      // Wrap horizontally
-      if (x > width - letterWidth) {
-        x = 0;
-        y+= maxHeight;
-      }
-
-      // Wrap vertically
-      if( y > height - letterHeight) {
-        y = 0;      // reset y to 0
-      }
+      /*
+      if (key == ENTER) {
+       image(enterRed, x, y);
+       }
+       */
+      image(images[index], x, y);
+      x += cellSize;
+      print(words);
     }
 
+    void mousePressed() {
+      words = "";
+      image(canvas, 0, 0);
+    }
+
+    void mouseReleased() {
+      background(255);
+      x = 10;
+      y = 10;
+    }
+    
+    
     </script>
     <canvas id="sketch" style="border: 1px solid black;"></canvas>
     
