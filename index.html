@@ -2,21 +2,10 @@
 
 <html>
 
-  <head>
-      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-      <title>Processing Demo</title>
-      <script type="text/javascript" src="js/processing.js"></script>
-  </head>
-  
-  <body>
-    <h1>Pensieri buttati</h1>
-    <p>A space where you can express your feelings</p>
-    
-    <script type="text/processing">
+
     
     String map = "abcdefghijklmnopqrstuvwxyz ";
     PImage [] images;
-    //PImage enterRed;
     char letter;
     String words = "";
     char chr;
@@ -31,14 +20,13 @@
 
     void setup() {
 
-      size(100, 100);
+      size(displayWidth, displayHeight);
       background(255);
 
       images = new PImage[map.length()];
       for (int i = 0; i < images.length; i++) {
         images[i] = loadImage(i + ".png");
       }
-      //enterRed = loadImage("27.png");
       canvas = createGraphics(width, height);
     }
 
@@ -76,14 +64,10 @@
           chr = words.charAt(i);
           index = map.indexOf(chr);
           // Write the letter to the console
-          println(chr);
+          //println(chr);
         }
       }
-      /*
-      if (key == ENTER) {
-       image(enterRed, x, y);
-       }
-       */
+     
       image(images[index], x, y);
       x += cellSize;
       print(words);
